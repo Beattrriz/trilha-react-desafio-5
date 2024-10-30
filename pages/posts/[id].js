@@ -19,45 +19,28 @@ const components = {
   Head,
 };
 
-export default function PostPage({
-  posts,
-  globalData,
-}) {
+export default function PostPage({ post, globalData }) {
   return (
-    <Layout>
-      <SEO
-        title={`${posts.title} - ${globalData.name}`}
-        description={posts.description}
-      />
-      <Header name={globalData.name} />
-      <article className="px-6 md:px-0">
-        <header>
-          <h1 className="text-3xl md:text-5xl dark:text-white text-center mb-12">
-            {posts?.title}
-          </h1>
-          {posts?.description && (
-            <p className="text-xl mb-4">{posts?.description}</p>
+      <Layout>
+          {post ? (
+              <>
+                  <SEO 
+                      title={`${post.title} - ${globalData.name}`} 
+                      description={post.description} 
+                  />
+                  <h1>{post.title}</h1>
+                  <p>{post.content}</p>
+                  {/* Adicione outros conteúdos do post conforme necessário */}
+              </>
+          ) : (
+              <div className="text-center mt-10">
+                  <h1 className="text-xl font-bold">Não há post</h1>
+                  <p>Desculpe, mas o post que você está procurando não existe ou não foi encontrado.</p>
+              </div>
           )}
-        </header>
-        <main>
-          <article className="prose dark:prose-dark">
-            {posts.body}
-          </article>
-        </main>
-      </article>
-      <Footer copyrightText={globalData.footerText} />
-      <GradientBackground
-        variant="large"
-        className="absolute -top-32 opacity-30 dark:opacity-50"
-      />
-      <GradientBackground
-        variant="small"
-        className="absolute bottom-0 opacity-20 dark:opacity-10"
-      />
-    </Layout>
+      </Layout>
   );
 }
-
 export const getServerSideProps = async ({ params }) => {
   const globalData = getGlobalData();
   const posts = await getPostBySlug(params.id);
